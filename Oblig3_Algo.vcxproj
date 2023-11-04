@@ -127,10 +127,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="General_Graph.cpp" />
     <ClCompile Include="General_Tree.cpp" />
     <ClCompile Include="Oblig3_Algo.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="General_Graph.h" />
     <ClInclude Include="General_Tree.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
