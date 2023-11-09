@@ -24,5 +24,19 @@ int main()
     GraphNode* thirdNode = bigGraf.createRandNode(504);
     GraphNode* fourthNode = bigGraf.createRandNode(607);
     GraphNode* fifthNode = bigGraf.createRandNode(7);
+    bigGraf.createNode(78, firstNode);
+
+    /*std::vector<std::pair<GraphNode*, GraphNode*>> edges = bigGraf.getEdges();
+    for (const auto& edge : edges) {
+        std::cout << "Edge: " << edge.first->data << " -> " << edge.second->data << std::endl;
+    }*/
+
+    /*std::vector<GraphNode*> vertices = bigGraf.getVertices();
+    for (const auto& vertex : vertices) {
+        std::cout << "Vertex data: " << vertex->data << std::endl;
+    }*/
+
+    std::cout << "Depth-First Traversal:" << std::endl;
+    bigGraf.depthFirstTraversal();
 }
 

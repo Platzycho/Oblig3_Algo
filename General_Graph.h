@@ -29,18 +29,17 @@ public:
 
 	std::vector<GraphNode*> adjacentNodes(GraphNode* inNode);
 
-	std::vector<GraphNode*> getVertices();
+	std::vector<std::pair<GraphNode*, GraphNode*>> getEdges() const;
 
-	void insertEdge(GraphNode* source, GraphNode* destination);
-
-	std::vector<std::pair<GraphNode*, GraphNode*>> getEdges();
-
-	void deleteEdge(GraphNode* source, GraphNode* destination);
-
-	void depthFirstTraversal(GraphNode* startNode);
+	std::vector<GraphNode*> getVertices() const;
 
 	int getSize();
 
 	bool isEmpty();
+
+	void depthFirstTraversal() const;
+
+private:
+	void depthFirstTraversalRecursive(GraphNode* startNode, std::vector<bool>& visited) const;
 };
 

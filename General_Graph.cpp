@@ -1,6 +1,7 @@
 #include "General_Graph.h"
 #include <iostream>
-#include <stack>
+#include <algorithm>
+#include <ctime>
 
 
 General_Graph::General_Graph()
@@ -25,7 +26,7 @@ GraphNode* General_Graph::createNode(float inData, GraphNode* inNode)
 GraphNode* General_Graph::createRandNode(float inData)
 {
 	srand(time(nullptr));
-	int randomIndex = rand()%nodeList.size() - 1;
+	int randomIndex = rand()%nodeList.size();
 	GraphNode* randomNode = nodeList[randomIndex];
 	return createNode(inData, randomNode);
 }
@@ -38,11 +39,10 @@ void General_Graph::printData(GraphNode* inNode)
 
 void General_Graph::deleteNode(GraphNode* inNode)
 {
-	auto it = std::find(nodeList.begin(), nodeList.end(), inNode);
-    if (it != nodeList.end()) {
-        nodeList.erase(it);
-        delete inNode;
+	for (auto node : nodeList) {
+        delete node;
     }
+    nodeList.clear();
 }
 
 void General_Graph::deleteAllNodes()
@@ -58,54 +58,22 @@ std::vector<GraphNode*> General_Graph::adjacentNodes(GraphNode* inNode)
 	 return inNode->adjacentList;
 }
 
-std::vector<GraphNode*> General_Graph::getVertices()
-{
-    return nodeList;
-}
-
-void General_Graph::insertEdge(GraphNode* source, GraphNode* destination)
-{
-    source->adjacentList.push_back(destination);
-}
-
-void General_Graph::deleteEdge(GraphNode* source, GraphNode* destination)
-{
-    auto it = std::find(source->adjacentList.begin(), source->adjacentList.end(), destination);
-    if (it != source->adjacentList.end()) {
-        source->adjacentList.erase(it);
-    }
-}
-
-std::vector<std::pair<GraphNode*, GraphNode*>> General_Graph::getEdges()
+std::vector<std::pair<GraphNode*, GraphNode*>> General_Graph::getEdges() const
 {
     std::vector<std::pair<GraphNode*, GraphNode*>> edges;
-    for (auto node : nodeList) {
-        for (auto adjacent : node->adjacentList) {
-            edges.push_back({node, adjacent});
+
+    for (const auto& node : nodeList) {
+        for (const auto& neighbor : node->adjacentList) {
+            edges.emplace_back(node, neighbor);
         }
     }
+
     return edges;
 }
 
-void General_Graph::depthFirstTraversal(GraphNode* startNode)
+std::vector<GraphNode*> General_Graph::getVertices() const
 {
-    std::vector<GraphNode*> visited;
-    std::stack<GraphNode*> stack;
-    stack.push(startNode);
-
-    while (!stack.empty()) {
-        GraphNode* current = stack.top();
-        stack.pop();
-
-        if (std::find(visited.begin(), visited.end(), current) == visited.end()) {
-            visited.push_back(current);
-            std::cout << current->data << " ";
-
-            for (auto neighbor : current->adjacentList) {
-                stack.push(neighbor);
-            }
-        }
-    }
+    return nodeList;
 }
 
 int General_Graph::getSize()
@@ -116,4 +84,32 @@ int General_Graph::getSize()
 bool General_Graph::isEmpty()
 {
 	return nodeList.empty();
+}
+
+void General_Graph::depthFirstTraversal() const
+{
+    std::vector<bool> visited(nodeList.size(), false);
+
+    for (std::size_t i = 0; i < nodeList.size(); ++i) {
+        if (!visited[i]) {
+            depthFirstTraversalRecursive(nodeList[i], visited);
+        }
+    }
+}
+
+void General_Graph::depthFirstTraversalRecursive(GraphNode* currentNode, std::vector<bool>& visited) const
+{
+    auto currentIndex = std::find(nodeList.begin(), nodeList.end(), currentNode) - nodeList.begin();
+
+    visited[currentIndex] = true;
+
+    std::cout << "Visited Node: " << currentNode->data << std::endl;
+
+    for (auto& neighbor : currentNode->adjacentList) {
+        auto neighborIndex = std::find(nodeList.begin(), nodeList.end(), neighbor) - nodeList.begin();
+
+        if (!visited[neighborIndex]) {
+            depthFirstTraversalRecursive(neighbor, visited);
+        }
+    }
 }
